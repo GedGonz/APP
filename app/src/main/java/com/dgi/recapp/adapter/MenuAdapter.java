@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,12 +25,20 @@ import com.dgi.recapp.Home.view.HomeFragment;
 import com.dgi.recapp.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +47,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 {
     public ArrayList<Menu> dataset;
     public Context context;
-
+    public Fragment fragment;
     private String[] MESES =new String[]{"Enero","Febrero","Marzo"};
-    private int[] Declaracion =new int[]{498, 500, 505};
+    private int[] Declaracion =new int[]{350, 500, 900};
     private int[] colors =new int[]
             {Color.rgb(126,189,171),
                     Color.rgb(170,189,71),
@@ -49,9 +58,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                     Color.rgb(25,187,227)};
 
 
-    public MenuAdapter( Context context) {
+    public MenuAdapter( Context context, Fragment fragment) {
         this.dataset = new ArrayList<>();
         this.context = context;
+        this.fragment=fragment;
 
     }
 
@@ -78,11 +88,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, ContainerActivity.class);
-                intent.putExtra("idmenu", IdMenu);
+                //Intent intent = new Intent(context, ContainerActivity.class);
+                //intent.putExtra("idmenu", IdMenu);
 
-                context.startActivity(intent);
+                //context.startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View newview =fragment.getLayoutInflater().inflate(R.layout.chart_dialog,null);
+                BarChart barChart = (BarChart) newview.findViewById(R.id.barChartDialog);
+                createCharts2(barChart);
 
+                builder.setView(newview);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 
@@ -195,6 +212,96 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             barChart = (BarChart) view.findViewById(R.id.barChart);
             this.Menus = Menus;
         }
+    }
+
+
+
+
+
+    private Chart getSameChart2(Chart chart, String Descripcion, int textColor, int background, int animacionY)
+    {
+        chart.getDescription().setText(Descripcion);
+        chart.getDescription().setTextSize(15);
+        chart.getDescription().setTextColor(textColor);
+        chart.setBackgroundColor(background);
+        chart.animateY(animacionY);
+        Legend2(chart);
+        return chart;
+
+    }
+
+    private void Legend2(Chart chart)
+    {
+        Legend legend = chart.getLegend();
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        ArrayList<LegendEntry> entries = new ArrayList<>();
+        for(int i= 0; i< MESES.length; i++)
+        {
+            LegendEntry entry = new LegendEntry();
+            entry.formColor = colors[i];
+            entry.label = MESES[i];
+            entries.add(entry);
+        }
+        legend.setCustom(entries);
+
+    }
+
+
+
+
+
+    private void axisX2(XAxis axis)
+    {
+        axis.setGranularityEnabled(true);
+        axis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        axis.setValueFormatter(new IndexAxisValueFormatter(MESES));
+
+    }
+
+    private void axisLeft2(YAxis axis)
+    {
+        axis.setSpaceTop(30);
+        axis.setAxisMinimum(0);
+
+    }
+
+    private void axisRight2(YAxis axis)
+    {
+        axis.setEnabled(false);
+    }
+
+    public void createCharts2(BarChart barChart)
+    {
+        barChart = (BarChart)getSameChart2(barChart,"Series",Color.WHITE,Color.WHITE,3000 );
+        barChart.setDrawGridBackground(true);
+        barChart.setData(getBarData2());
+        barChart.invalidate();
+        axisX2(barChart.getXAxis());
+        axisLeft2(barChart.getAxisLeft());
+        axisRight2(barChart.getAxisRight());
+
+
+    }
+
+    private DataSet getData2(DataSet dataSet)
+    {
+        dataSet.setColors(colors);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextSize(10);
+
+        return dataSet;
+    }
+
+    private BarData getBarData2()
+    {
+        BarDataSet barDataSet =(BarDataSet) getData2(new BarDataSet(getBarEntries(),""));
+
+        barDataSet.setBarShadowColor(Color.GRAY);
+        BarData barData = new BarData(barDataSet);
+        barData.setBarWidth(0.45f);
+        return barData;
     }
 
 

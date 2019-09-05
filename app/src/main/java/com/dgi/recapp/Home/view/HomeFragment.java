@@ -67,12 +67,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.Menurecycler);
-        menuAdapter = new MenuAdapter(view.getContext());
+        menuAdapter = new MenuAdapter(view.getContext(), this);
         recyclerView.setAdapter(menuAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
