@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,7 @@ public class HomeFragment extends Fragment {
     Call<List<Menu>> call;
     private String TAG="HOMEMENU";
     boolean isExecute =false;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -72,13 +73,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.Menurecycler);
-        menuAdapter = new MenuAdapter(view.getContext(), this);
-        recyclerView.setAdapter(menuAdapter);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        swipeRefreshLayout =(SwipeRefreshLayout) view.findViewById(R.id.refreshcard);
 
         tokenManager = TokenManager.getInstance(view.getContext().getSharedPreferences("prefs", MODE_PRIVATE));
 
@@ -88,9 +83,20 @@ public class HomeFragment extends Fragment {
         }
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
 
+
         showToolbar("Home",false,view);
 
         getMenu(view);
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getMenu(view);
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
 
         return view;
     }
@@ -104,6 +110,13 @@ public class HomeFragment extends Fragment {
     private void getMenu(View view)
     {
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.Menurecycler);
+        menuAdapter = new MenuAdapter(view.getContext(), this);
+        recyclerView.setAdapter(menuAdapter);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
         call = service.getMenu();
 
         call.enqueue(new Callback<List<Menu>>() {
@@ -127,6 +140,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(view.getContext(),"No esta Autorizado", Toast.LENGTH_LONG).show();
 
                     }
+                    swipeRefreshLayout.setRefreshing(false);
                     tokenManager.deleteToken();
 
 
@@ -136,6 +150,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Menu>> call, Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
