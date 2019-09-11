@@ -19,4 +19,48 @@
         android:layout_height="200dp"
 
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        />
+    <TextView
+        android:id="@+id/TituloDetalle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Datos de Declaraciones"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:id="@+id/TablaDatos"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tiempo(m)"
+                android:layout_marginRight="100dp"
+                android:id="@+id/txtTiempo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Valor"
+                android:id="@+id/txtValor"/>
+
+
+        </TableRow>
+
+    </TableLayout>
 </LinearLayout>

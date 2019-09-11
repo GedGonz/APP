@@ -32,17 +32,7 @@ public class ChartBarDetails {
                     Color.rgb(227,147,25),
                     Color.rgb(227,108,25),
                     Color.rgb(25,187,227)};
-    private Chart getSameChart2(Chart chart, String Descripcion, int textColor, int background, int animacionY)
-    {
-        chart.getDescription().setText(Descripcion);
-        chart.getDescription().setTextSize(15);
-        chart.getDescription().setTextColor(textColor);
-        chart.setBackgroundColor(background);
-        chart.animateY(animacionY);
-        Legend(chart);
-        return chart;
 
-    }
 
     public void createCharts(BarChart barChart)
     {
@@ -54,6 +44,17 @@ public class ChartBarDetails {
         axisLeft(barChart.getAxisLeft());
         axisRight2(barChart.getAxisRight());
 
+
+    }
+    private Chart getSameChart2(Chart chart, String Descripcion, int textColor, int background, int animacionY)
+    {
+        chart.getDescription().setText(Descripcion);
+        chart.getDescription().setTextSize(15);
+        chart.getDescription().setTextColor(textColor);
+        chart.setBackgroundColor(background);
+        chart.animateY(animacionY);
+        Legend(chart);
+        return chart;
 
     }
     private void Legend(Chart chart)
@@ -114,7 +115,7 @@ public class ChartBarDetails {
     private DataSet getData(DataSet dataSet)
     {
         dataSet.setColors(colors);
-        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextColor(Color.GRAY);
         dataSet.setValueTextSize(10);
 
         return dataSet;

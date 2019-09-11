@@ -4,7 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -63,12 +64,39 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                 //context.startActivity(intent);
 
 
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 View newview =fragment.getLayoutInflater().inflate(R.layout.chart_dialog,null);
                 TextView cardChartTitulo = (TextView)newview.findViewById(R.id.CardChartTitulo);
+                TextView txtTiempo = (TextView)newview.findViewById(R.id.txtTiempo);
+                TextView txtValor = (TextView)newview.findViewById(R.id.txtValor);
+                TextView txtTituloDetalle = (TextView)newview.findViewById(R.id.TituloDetalle);
+                txtTituloDetalle.setText("Datos de "+menu.getTitulo());
+                TableLayout tabla=(TableLayout)newview.findViewById(R.id.TablaDatos);
+                tabla.setStretchAllColumns(true);
+                tabla.bringToFront();
+
+                for (int i=0; i<menu.getData().getDatos().length; i++) {
+                    TableRow fil= new TableRow(context);
+
+                    TextView Teimpo=new TextView(context);
+                    TextView Valor=new TextView(context);
+
+
+                    Teimpo.setText(String.valueOf(menu.getData().getMinutos()[i]));
+                    Valor.setText(String.valueOf(menu.getData().getDatos()[i]));
+
+
+                    fil.addView(Teimpo);
+                    fil.addView(Valor);
+
+
+                    tabla.addView(fil);
+                }
+
 
                 BarChart barChart = (BarChart) newview.findViewById(R.id.barChartDialog);
-                cardChartTitulo.setText(menu.getTitulo());
+                cardChartTitulo.setText("Gráfica de "+menu.getTitulo());
                 new ChartBarDetails(menu.getData().getMinutos(),menu.getData().getDatos()).createCharts(barChart);
 
                 builder.setView(newview);
@@ -110,15 +138,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     public static class MenuViewHolder extends RecyclerView.ViewHolder
     {
         TextView TituloMenu, DescripcionMenu;
-        ImageView ImageIconMenu;
         List<Menu> Menus;
         BarChart barChart;
+
 
         public MenuViewHolder(@NonNull View view, List<Menu> Menus) {
             super(view);
             this.TituloMenu = (TextView)view.findViewById(R.id.TituloMenu);
             this.DescripcionMenu = (TextView)view.findViewById(R.id.DescripcionMenu);
             barChart = (BarChart) view.findViewById(R.id.barChart);
+
             this.Menus = Menus;
         }
     }
