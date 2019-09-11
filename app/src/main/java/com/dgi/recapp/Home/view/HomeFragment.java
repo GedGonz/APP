@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
 
                     menuAdapter.addItemList(response.body());
                     for (Menu menu: response.body() ) {
-                        Log.w(TAG , "Success: " + menu.getIamgenIcon() );
+                        Log.w(TAG , "Success: " + menu.getTitulo() );
                     }
                 }else {
                     if (response.code() == 422) {

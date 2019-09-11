@@ -1,13 +1,13 @@
 package com.dgi.recapp.Api.Model;
 
-public class Menu {
+import java.util.List;
 
+public class Menu {
 
 
     private int Id;
     private String Titulo;
-    private String Descripcion;
-    private String ImageIcon;
+    private DatosTiempo Data;
 
 
     public int getId() {
@@ -26,22 +26,13 @@ public class Menu {
         Titulo = titulo;
     }
 
-    public String getDescripcion() {
-        return Descripcion;
+    public DatosTiempo getData() {
+        return Data;
     }
 
-    public void setDescripcion(String descripcion) {
-        Descripcion = descripcion;
+    public void setData(DatosTiempo data) {
+        Data = data;
     }
-
-    public String getIamgenIcon() {
-        return ImageIcon;
-    }
-
-    public void setIamgenIcon(String iamgenIcon) {
-        ImageIcon = iamgenIcon;
-    }
-
-
-
 }
+
+
